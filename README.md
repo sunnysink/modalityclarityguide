@@ -1,1 +1,1 @@
-# moldalityclarityguide
+# modalityclarityguide
