@@ -2183,14 +2183,57 @@ function ModalityClarityGuide() {
   const [loadedArchetype, setLoadedArchetype] = useState(null);
   const [archetypeFilter, setArchetypeFilter] = useState("all");
   const [expandedArchetype, setExpandedArchetype] = useState(null);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 900);
 
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
+
+      useEffect(() => {
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+
+    const mediaQuery = window.matchMedia("(min-width: 900px)");
+    const handleViewportChange = (event) => setIsDesktop(event.matches);
+    handleViewportChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleViewportChange);
+      document.head.removeChild(link);
+    };
   }, []);
 
+      const navContainerStyle = {
+    display: "flex",
+    gap: isDesktop ? "10px" : "4px",
+    padding: isDesktop ? "14px 24px" : "12px 16px",
+    overflowX: isDesktop ? "visible" : "auto",
+    justifyContent: isDesktop ? "center" : "flex-start",
+    flexWrap: isDesktop ? "wrap" : "nowrap",
+    borderBottom: "1px solid rgba(14,61,61,0.08)",
+    background: "rgba(243,233,218,0.3)"
+  };
+
+  const getNavButtonStyle = (isActive) => ({
+    padding: isDesktop ? "10px 20px" : "8px 16px",
+    borderRadius: isDesktop ? "999px" : "20px",
+    border: isDesktop && !isActive ? "1px solid rgba(14,61,61,0.12)" : "none",
+    cursor: "pointer",
+    fontSize: isDesktop ? "13px" : "12px",
+    letterSpacing: isDesktop ? "0.2px" : "normal",
+    fontFamily: "'Montserrat', sans-serif",
+    fontWeight: isActive ? 600 : 500,
+    background: isActive ? "#8B6F5E" : (isDesktop ? "rgba(255,255,255,0.35)" : "transparent"),
+    color: isActive ? "#FFF" : "#7A5B6E",
+    boxShadow: isDesktop && isActive ? "0 4px 10px rgba(139,111,94,0.25)" : "none",
+    whiteSpace: "nowrap",
+    transition: "all 0.2s ease"
+  });
   return (
     <div style={{
       minHeight: "100vh",
@@ -2239,14 +2282,7 @@ function ModalityClarityGuide() {
       </div>
 
       {/* Navigation */}
-      <div style={{
-        display: "flex",
-        gap: "4px",
-        padding: "12px 16px",
-        overflowX: "auto",
-        borderBottom: "1px solid rgba(14,61,61,0.08)",
-        background: "rgba(243,233,218,0.3)"
-      }}>
+            <div style={navContainerStyle}>
         {SECTIONS.map(section => (
           <button
             key={section.id}
